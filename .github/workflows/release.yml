@@ -1,0 +1,67 @@
+name: Release
+
+# Builds the cart from cart.lua + label.png and publishes it as a Release.
+# The build uses the engine's own CartManifest, so the file format can never
+# drift from what the launcher installs.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to release
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out the engine for its cart encoder
+        uses: actions/checkout@v4
+        with:
+          repository: bryanthaboi/gen1recomp
+          path: .engine
+
+      - name: Install LuaJIT
+        run: sudo apt-get update && sudo apt-get install -y luajit
+
+      - name: Read the version from cart.lua
+        id: ver
+        run: |
+          v="${{ github.event.inputs.version }}"
+          if [ -z "$v" ]; then
+            v=$(luajit -e 'print(dofile("cart.lua").version)')
+          fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+
+      - name: Build the cart
+        run: |
+          luajit build.lua .engine omega_random_competition.g1rcart
+          sha256sum omega_random_competition.g1rcart | tee sha256sums.txt
+
+      - name: Skip when this version is already released
+        id: gate
+        run: |
+          if gh release view "v${{ steps.ver.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=no" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Publish
+        if: steps.gate.outputs.exists == 'no'
+        run: |
+          gh release create "v${{ steps.ver.outputs.version }}" \
+            --title "${{ steps.ver.outputs.version }}" \
+            --notes "OMEGA RANDOM COMPETITION ${{ steps.ver.outputs.version }}. Install the .g1rcart from the launcher's Custom Carts list." \
+            omega_random_competition.g1rcart sha256sums.txt
+        env:
+          GH_TOKEN: ${{ github.token }}
