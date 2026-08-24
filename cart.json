@@ -2,7 +2,7 @@
   "schema": 1,
   "id": "omega_random_competition",
   "title": "OMEGA RANDOM COMPETITION",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "bryanthaboi",
   "repo": "bryanthaboi/omega-random-competition",
   "shell": "#7b1b22",
@@ -15,7 +15,7 @@
       "id": "bcr",
       "source": "github",
       "repo": "bryanthaboi/bcr",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "sha256": "83a111b49c4e8c4fd4d6886d60a673372cb9e9d334e091360048587da23938f0"
     }
   ],
