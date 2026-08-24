@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "id": "omega_random_competition",
+  "title": "OMEGA RANDOM COMPETITION",
+  "version": "1.0.0",
+  "author": "bryanthaboi",
+  "repo": "bryanthaboi/omega-random-competition",
+  "shell": "#7b1b22",
+  "label": "label.png",
+  "base": "red",
+  "engine": ">=0.0.0-dev <1.0.0",
+  "seal": "sealed",
+  "mods": [
+    {
+      "id": "bcr",
+      "source": "github",
+      "repo": "bryanthaboi/bcr",
+      "version": "1.0.0",
+      "sha256": "83a111b49c4e8c4fd4d6886d60a673372cb9e9d334e091360048587da23938f0"
+    }
+  ],
+  "summary": "Bois Club Randomizer as its own cartridge. One seed, paired warps, 1x or 2x only.",
+  "finish": "holo",
+  "speeds": [
+    1,
+    2
+  ]
+}
